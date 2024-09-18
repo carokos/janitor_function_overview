@@ -1,24 +1,41 @@
 ---
 title: "Janitor Function Overview"
 format: revealjs
-editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
-
-## Bullets
-
-When you click the **Render** button a document will be generated that includes:
-
--   Content authored with markdown
--   Output from executable code
-
-## Code
-
-When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
-
 ```{r}
-1 + 1
+library(tidyverse)
+library(janitor)
 ```
+
+## fyi
+
+- chisq and fisher test function (talk about masking)
+- data sets we will use
+
+## cleaning
+
+- clean_names (cleaning) [mess up names from kaggle species - spongebob meme]
+- make_clean_names (cleaning) [kaggle species data set - change average to mus]
+  + mu_to_u
+- get_dupes (cleaning) [kaggle characters - Saw Gurerra is duplicated]
+- convert_to_date (cleaning) [kaggle films - make sure dates are excel dates]
+  + mention excel conversions specifically
+- remove_empty (cleaning) [make empty column to remove]
+- remove_constant (cleaning) [make constant column to remove]
+
+## tidying
+
+- round_half_up [kaggle characters - height]
+- round_to_fraction [kaggle characters - height]
+- signif_half_up [kaggle characters - height]
+- compare_df_cols (checking) [split kaggle characters into humans vs non-human and mess one up, then use these to check before row binding]
+- compare_df_cols_same (checking) [split kaggle characters into humans vs non-human and mess one up, then use these to check before row binding]
+
+
+## `tabyl`
+
+- tabyl [kaggle characters - death status vs weight]
+- adorn_*
+- untabyl
+
