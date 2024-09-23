@@ -1,0 +1,48 @@
+/*-- scss:defaults --*/
+$body-bg: #000000;
+$body-color: #fff;
+$presentation-heading-color: "#FFE81F";
+$code-color: #75934e;
+$custom-col: #FFE81F;
+
+/*-- scss:rules --*/
+
+details>summary {
+  font-size: 0.75em;
+}
+
+.starwarsyellow {
+  color: $custom-col;
+}
+
+.smaller {
+  font-size: 0.5em;
+}
+
+.small {
+  font-size: 0.75em;
+}
+
+.larger {
+  font-size: 1.5em;
+}
+
+.largest {
+  font-size: 3em;
+}
+
+.emphasized {
+  font-weight: bold;
+  color: $custom-col;
+}
+
+.faded {
+  color: #b8bcc2;
+}
+
+.reveal .slide .v-center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90%;
+}
