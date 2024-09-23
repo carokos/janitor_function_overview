@@ -1,41 +1,91 @@
 ---
-title: "Janitor Function Overview"
-format: revealjs
+format: 
+  revealjs:
+    theme:  [default, starwars.scss]
+    transition: fade
+    slide-number: true
+    scrollable: true
+embed-resources: true
+execute:
+  echo: true 
+editor: source
 ---
 
 ```{r}
+#| include: false
 library(tidyverse)
 library(janitor)
+
+## load in data sets
+# characters <- read_csv("data/characters.csv")
+characters_messy <- read_csv("data/characters_messy.csv")
+# films <- read_csv("data/films.csv")
+films_messy <- read_csv("data/films_messy.csv")
+# species <- read_csv("data/species.csv")
+species_messy <- read_csv("data/species_messy.csv")
 ```
 
-## fyi
+# {janitor} {.starwarsyellow background-image="images/stars_bg2.png" style="text-align: center;"}
 
-- chisq and fisher test function (talk about masking)
-- data sets we will use
+![](images/leia-flyboy.gif){width="30%"}
 
-## cleaning
+Caroline Kostrzewa, Sabrina Lin
 
-- clean_names (cleaning) [mess up names from kaggle species - spongebob meme]
-- make_clean_names (cleaning) [kaggle species data set - change average to mus]
-  + mu_to_u
-- get_dupes (cleaning) [kaggle characters - Saw Gurerra is duplicated]
-- convert_to_date (cleaning) [kaggle films - make sure dates are excel dates]
-  + mention excel conversions specifically
-- remove_empty (cleaning) [make empty column to remove]
-- remove_constant (cleaning) [make constant column to remove]
+Topic Tuesdays: 2024-10-01
 
-## tidying
+## FYI
 
-- round_half_up [kaggle characters - height]
-- round_to_fraction [kaggle characters - height]
-- signif_half_up [kaggle characters - height]
-- compare_df_cols (checking) [split kaggle characters into humans vs non-human and mess one up, then use these to check before row binding]
-- compare_df_cols_same (checking) [split kaggle characters into humans vs non-human and mess one up, then use these to check before row binding]
+* Using three data sets which we have "messed up" in various ways (all from [Kaggle](https://www.kaggle.com/datasets/jsphyg/star-wars))   
+  + Species     
+  + Characters    
+  + Films   
+
+<br> 
+* chisq and fisher test function (talk about masking)
+
+## Species
+
+```{r}
+glimpse(species_messy)
+```
 
 
-## `tabyl`
+## Characters
 
-- tabyl [kaggle characters - death status vs weight]
-- adorn_*
-- untabyl
+```{r}
+glimpse(characters_messy)
+```
 
+
+## Films
+
+```{r}
+glimpse(films_messy)
+```
+
+
+
+# Cleaning {.starwarsyellow background-image="images/stars_bg2.png" style="text-align: center;"}
+
+-   clean_names (cleaning) \[mess up names from kaggle species - spongebob meme\]
+-   make_clean_names (cleaning) \[kaggle species data set - change average to mus\]
+    -   mu_to_u
+-   get_dupes (cleaning) \[kaggle characters - Saw Gurerra is duplicated\]
+-   convert_to_date (cleaning) \[kaggle films - make sure dates are excel dates\]
+    -   mention excel conversions specifically
+-   remove_empty (cleaning) \[make empty column to remove\]
+-   remove_constant (cleaning) \[make constant column to remove\]
+
+# Tidying {.starwarsyellow background-image="images/stars_bg2.png" style="text-align: center;"}
+
+-   round_half_up \[kaggle characters - height\]
+-   round_to_fraction \[kaggle characters - height\]
+-   signif_half_up \[kaggle characters - height\]
+-   compare_df_cols (checking) \[split kaggle characters into humans vs non-human and mess one up, then use these to check before row binding\]
+-   compare_df_cols_same (checking) \[split kaggle characters into humans vs non-human and mess one up, then use these to check before row binding\]
+
+# `tabyl` {background-image="images/stars_bg2.png" style="text-align: center;"}
+
+-   tabyl \[kaggle characters - death status vs weight\]
+-   adorn\_\*
+-   untabyl
