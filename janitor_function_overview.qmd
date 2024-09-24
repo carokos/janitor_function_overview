@@ -15,12 +15,14 @@ editor: source
 #| include: false
 library(tidyverse)
 library(janitor)
+library(gt)
+library(gtExtras)
 
 ## load in data sets
 # characters <- read_csv("data/characters.csv")
 characters_messy <- read_csv("data/characters_messy.csv")
 # films <- read_csv("data/films.csv")
-films_messy <- read_csv("data/films_messy.csv")
+films_messy <- readxl::read_excel("data/films_messy.xlsx")
 # species <- read_csv("data/species.csv")
 species_messy <- read_csv("data/species_messy.csv")
 ```
@@ -46,22 +48,46 @@ Topic Tuesdays: 2024-10-01
 ## Species
 
 ```{r}
-glimpse(species_messy)
+#| echo: false
+species_messy |> 
+  slice(1:10) |> 
+  gtreg::tbl_listing() |> 
+  gtreg::as_gt() |> 
+  gtExtras::gt_theme_dark()
 ```
 
 
 ## Characters
 
 ```{r}
-glimpse(characters_messy)
+#| echo: false
+characters_messy |> 
+  slice(1:10) |> 
+  gtreg::tbl_listing() |> 
+  gtreg::as_gt() |> 
+  gtExtras::gt_theme_dark()
+```
+
+```{r}
+#| include: false
+
+characters_messy <- 
+  characters_messy |> 
+  mutate(death_status = if_else(!is.na(year_died), "dead", "alive"),
+         bmi = if_else(weight > 75, "BMI High", "BMI Low"))
 ```
 
 
 ## Films
 
 ```{r}
-glimpse(films_messy)
+#| echo: false
+films_messy |> 
+  gtreg::tbl_listing() |> 
+  gtreg::as_gt() |> 
+  gtExtras::gt_theme_dark()
 ```
+
 
 
 
@@ -70,6 +96,35 @@ glimpse(films_messy)
 -   clean_names (cleaning) \[mess up names from kaggle species - spongebob meme\]
 -   make_clean_names (cleaning) \[kaggle species data set - change average to mus\]
     -   mu_to_u
+    
+## `get_dupes()`
+
+Shows the duplicated rows according to a certain column (or multiple columns).
+
+```{r}
+#| output-location: fragment
+
+characters_messy |> 
+  get_dupes(name) |> 
+  select(name, dupe_count, species, height, weight, homeworld) |> 
+  print(n = Inf)
+```
+
+## `convert_to_date()`
+
+* Can handle mixed types ("2024-10-01" [character] vs 344402 [numeric])   
+* Will handle Excel-specific date numbers (through `excel_numeric_to_date()`)
+
+```{r}
+#| output-location: fragment
+
+films_messy |> 
+  mutate(release_date_clean = convert_to_date(release_date),
+         release_data_lub = lubridate::as_date(release_date)) |> 
+  select(title, release_date, release_date_clean, release_data_lub)
+```
+
+## next
 -   get_dupes (cleaning) \[kaggle characters - Saw Gurerra is duplicated\]
 -   convert_to_date (cleaning) \[kaggle films - make sure dates are excel dates\]
     -   mention excel conversions specifically
@@ -78,14 +133,79 @@ glimpse(films_messy)
 
 # Tidying {.starwarsyellow background-image="images/stars_bg2.png" style="text-align: center;"}
 
+## functions
+
 -   round_half_up \[kaggle characters - height\]
 -   round_to_fraction \[kaggle characters - height\]
 -   signif_half_up \[kaggle characters - height\]
 -   compare_df_cols (checking) \[split kaggle characters into humans vs non-human and mess one up, then use these to check before row binding\]
 -   compare_df_cols_same (checking) \[split kaggle characters into humans vs non-human and mess one up, then use these to check before row binding\]
 
-# `tabyl` {background-image="images/stars_bg2.png" style="text-align: center;"}
+# `tabyl()` {background-image="images/stars_bg2.png" style="text-align: center;"}
 
--   tabyl \[kaggle characters - death status vs weight\]
--   adorn\_\*
--   untabyl
+## `tabyl()` Basics
+
+`tabyl()` is halfway between `table()` and `gtsummary::cross_tab()`
+
+```{r}
+## one variable
+characters_messy |> 
+  tabyl(death_status)
+```
+<br>
+```{r}
+## two variables
+characters_messy |> 
+  tabyl(death_status, bmi)
+```
+
+## `adorn_*()`
+
+Functions to make your "tabyls" more readable:
+
+* `adorn_title()` -- add column name to the top of a two-way table    
+* `adorn_totals()` -- add row/column totals to a tabyl   
+* `adorn_percentages()` -- converts tabyl of counts to percentages   
+
+<br> 
+
+Functions that come after using `adorn_percentages()`
+
+* `adorn_pct_formatting()` -- formatting decimals as percentages    
+* `adorn_ns()` -- add underlying Ns to a tabyl with percentages    
+* `adorn_rounding()` -- round numeric columns    
+
+
+
+
+## Adorn with totals and titles
+
+```{r}
+characters_messy |> 
+  tabyl(death_status, bmi, show_na = FALSE) |> 
+  adorn_totals() |> 
+  adorn_title()
+```
+
+## Adorn with percentages
+
+```{r}
+characters_messy |> 
+  tabyl(death_status, bmi, show_na = FALSE) |> 
+  adorn_percentages() |> 
+  adorn_pct_formatting()
+```
+
+<br>
+
+```{r}
+characters_messy |> 
+  tabyl(death_status, bmi, show_na = FALSE) |> 
+  adorn_percentages() |> 
+  adorn_pct_formatting() |> 
+  adorn_ns()
+```
+
+## FYI
+
+* untabyl -- when would we want to do this??????
