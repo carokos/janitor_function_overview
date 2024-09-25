@@ -99,11 +99,18 @@ characters_messy <-
 ```{r}
 #| echo: false
 films_messy |> 
+  # manipulating data for later example
+  mutate(
+    sl_opinion = case_when(
+      director %in% c("J.J. Abrams") ~ NA_character_,
+      .default = "good"
+    ),
+    ck_opinion = NA
+  ) |> 
   gtreg::tbl_listing() |> 
   gtreg::as_gt() |> 
   gtExtras::gt_theme_dark()
 ```
-
 
 
 
@@ -125,18 +132,20 @@ Cleans names of an object (usually a data.frame)
 species_messy |> 
   clean_names(
     case = "snake", #default case
-    replace = c("hAiR" = "hair", "cOlOrS" = "colors", "hOmEwOrLd" = "homeworld")
   )
 ```
 
+
+## `clean_names` continued
+
 ```{r}
-#| code-line-numbers: "138"
+#| output-location: fragment
 species_messy |> 
   clean_names(
     case = "snake", #default case
     replace = c("hAiR" = "hair", "cOlOrS" = "colors", "hOmEwOrLd" = "homeworld", 
                 janitor:::mu_to_u)
-  )
+  ) 
 ```
 
 
@@ -184,16 +193,36 @@ films_messy |>
 ## `remove_empty`
 
 ```{r}
+#| output-location: fragment
 
+films_messy
+
+films_messy |> 
+  remove_empty("cols")
 ```
 
 
 ## `remove_constant`
 
-```{r}
+Removes columns with one constant value
 
+
+```{r}
+films_messy |> 
+  remove_constant()
 ```
 
+
+## `remove_constant`
+
+Can also specify whether NA's should be considered different from a constant value
+
+```{r}
+films_messy |> 
+  remove_constant(
+    na.rm = TRUE # default is FALSE
+  )
+```
 
 ## next
 -   get_dupes (cleaning) \[kaggle characters - Saw Gurerra is duplicated\]
