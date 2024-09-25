@@ -24,7 +24,7 @@ characters_messy <- read_csv("data/characters_messy.csv")
 # films <- read_csv("data/films.csv")
 films_messy <- readxl::read_excel("data/films_messy.xlsx")
 # species <- read_csv("data/species.csv")
-species_messy <- read_csv("data/species_messy.csv")
+species_messy <- readxl::read_excel("data/species_messy.xlsx")
 ```
 
 # {janitor} {.starwarsyellow background-image="images/stars_bg2.png" style="text-align: center;"}
@@ -51,9 +51,25 @@ Topic Tuesdays: 2024-10-01
 #| echo: false
 species_messy |> 
   slice(1:10) |> 
-  gtreg::tbl_listing() |> 
-  gtreg::as_gt() |> 
-  gtExtras::gt_theme_dark()
+  gtreg::tbl_listing(bold_headers = FALSE) |> 
+  gtreg::as_gt() |>
+  tab_options(
+      heading.align = "left",
+      heading.border.bottom.style = "none",
+      table.background.color = "#333333",
+      table.font.color.light = "white",
+      table.border.top.style = "none",
+      table.border.bottom.color = "#333333",
+      table.border.left.color = "#333333",
+      table.border.right.color = "#333333",
+      table_body.border.top.style = "none",
+      table_body.border.bottom.color = "#333333",
+      column_labels.border.top.style = "none",
+      column_labels.background.color = "#333333",
+      column_labels.border.bottom.width = 3,
+      column_labels.border.bottom.color = "white",
+      data_row.padding = px(7)
+    )
 ```
 
 
@@ -96,6 +112,46 @@ films_messy |>
 -   clean_names (cleaning) \[mess up names from kaggle species - spongebob meme\]
 -   make_clean_names (cleaning) \[kaggle species data set - change average to mus\]
     -   mu_to_u
+
+    
+## `clean_names`
+
+Cleans names of an object (usually a data.frame)
+
+```{r}
+#| output-location: fragment
+#| warning: true
+
+species_messy |> 
+  clean_names(
+    case = "snake", #default case
+    replace = c("hAiR" = "hair", "cOlOrS" = "colors", "hOmEwOrLd" = "homeworld")
+  )
+```
+
+```{r}
+#| code-line-numbers: "138"
+species_messy |> 
+  clean_names(
+    case = "snake", #default case
+    replace = c("hAiR" = "hair", "cOlOrS" = "colors", "hOmEwOrLd" = "homeworld", 
+                janitor:::mu_to_u)
+  )
+```
+
+
+## `make_clean_names`
+
+Returns a clean character vector
+
+```{r}
+species_messy |> 
+  select(name) |> 
+  mutate(
+    NAME_CLEAN = make_clean_names(name)
+  )
+```
+
     
 ## `get_dupes()`
 
@@ -123,6 +179,21 @@ films_messy |>
          release_data_lub = lubridate::as_date(release_date)) |> 
   select(title, release_date, release_date_clean, release_data_lub)
 ```
+
+
+## `remove_empty`
+
+```{r}
+
+```
+
+
+## `remove_constant`
+
+```{r}
+
+```
+
 
 ## next
 -   get_dupes (cleaning) \[kaggle characters - Saw Gurerra is duplicated\]
