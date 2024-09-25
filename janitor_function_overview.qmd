@@ -43,7 +43,11 @@ Topic Tuesdays: 2024-10-01
   + Films   
 
 <br> 
-* chisq and fisher test function (talk about masking)
+
+* chisq and fisher test function (talk about masking)   
+-- put screenshot of warning
+-- put actual function names
+-- add stuff about masking
 
 ## Species
 
@@ -98,7 +102,8 @@ characters_messy <-
 
 ```{r}
 #| echo: false
-films_messy |> 
+films_messy <- 
+  films_messy |> 
   # manipulating data for later example
   mutate(
     sl_opinion = case_when(
@@ -106,7 +111,9 @@ films_messy |>
       .default = "good"
     ),
     ck_opinion = NA
-  ) |> 
+  )
+
+films_messy |> 
   gtreg::tbl_listing() |> 
   gtreg::as_gt() |> 
   gtExtras::gt_theme_dark()
@@ -116,14 +123,19 @@ films_messy |>
 
 # Cleaning {.starwarsyellow background-image="images/stars_bg2.png" style="text-align: center;"}
 
--   clean_names (cleaning) \[mess up names from kaggle species - spongebob meme\]
--   make_clean_names (cleaning) \[kaggle species data set - change average to mus\]
-    -   mu_to_u
+![](images/star-wars-han-solo.gif)
 
     
-## `clean_names`
+## `clean_names()`
 
 Cleans names of an object (usually a data.frame)
+
+```{r}
+#| output-location: fragment
+
+names(species_messy)
+```
+
 
 ```{r}
 #| output-location: fragment
@@ -132,11 +144,18 @@ Cleans names of an object (usually a data.frame)
 species_messy |> 
   clean_names(
     case = "snake", #default case
-  )
+  ) |> 
+  names()
 ```
 
 
-## `clean_names` continued
+## `clean_names()` continued
+
+```{r}
+#| output-location: fragment
+
+names(species_messy)
+```
 
 ```{r}
 #| output-location: fragment
@@ -145,15 +164,18 @@ species_messy |>
     case = "snake", #default case
     replace = c("hAiR" = "hair", "cOlOrS" = "colors", "hOmEwOrLd" = "homeworld", 
                 janitor:::mu_to_u)
-  ) 
+  ) |> 
+  names()
 ```
 
 
-## `make_clean_names`
+## `make_clean_names()`
 
 Returns a clean character vector
 
 ```{r}
+#| output-location: fragment
+
 species_messy |> 
   select(name) |> 
   mutate(
@@ -224,14 +246,9 @@ films_messy |>
   )
 ```
 
-## next
--   get_dupes (cleaning) \[kaggle characters - Saw Gurerra is duplicated\]
--   convert_to_date (cleaning) \[kaggle films - make sure dates are excel dates\]
-    -   mention excel conversions specifically
--   remove_empty (cleaning) \[make empty column to remove\]
--   remove_constant (cleaning) \[make constant column to remove\]
-
 # Tidying {.starwarsyellow background-image="images/stars_bg2.png" style="text-align: center;"}
+
+![](images/star-wars-junk.gif)
 
 ## functions
 
@@ -242,6 +259,8 @@ films_messy |>
 -   compare_df_cols_same (checking) \[split kaggle characters into humans vs non-human and mess one up, then use these to check before row binding\]
 
 # `tabyl()` {background-image="images/stars_bg2.png" style="text-align: center;"}
+
+![](images/the-garbage-will-do-rey-palpatine.gif) 
 
 ## `tabyl()` Basics
 
@@ -309,3 +328,11 @@ characters_messy |>
 ## FYI
 
 * untabyl -- when would we want to do this??????
+
+# Takeaways
+
+## Takeaways
+
+# MAY THE FORCE BE WITH YOU
+
+![](images/mtfbwy-leia.webp)
