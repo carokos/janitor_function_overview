@@ -37,17 +37,17 @@ Topic Tuesdays: 2024-10-01
 
 ## FYI
 
+![](images/masking-warning.png) 
+
+* `janitor::chisq.test()` and `janitor::fisher.test()` mask the versions in `{stats}`   
+* After loading `{janitor}` if you call `chisq.test()` without specifying which package, it will default to the `{janitor}` package (loaded in last)    
+
+## Data
+
 * Using three data sets which we have "messed up" in various ways (all from [Kaggle](https://www.kaggle.com/datasets/jsphyg/star-wars))   
   + Species     
   + Characters    
-  + Films   
-
-<br> 
-
-* chisq and fisher test function (talk about masking)   
--- put screenshot of warning
--- put actual function names
--- add stuff about masking
+  + Films 
 
 ## Species
 
@@ -148,6 +148,9 @@ Cleans names of an object (usually a data.frame)
 names(species_messy)
 ```
 
+<br>
+
+. . . 
 
 ```{r}
 #| output-location: fragment
@@ -164,14 +167,16 @@ species_messy |>
 ## `clean_names()` continued
 
 ```{r}
-#| output-location: fragment
-
 species_messy |> 
   clean_names(
     case = "snake", #default case
   ) |> 
   names()
 ```
+
+<br>
+
+. . . 
 
 ```{r}
 #| output-location: fragment
@@ -180,6 +185,32 @@ species_messy |>
     case = "snake", #default case
     replace = c("hAiR" = "hair", "cOlOrS" = "colors", "hOmEwOrLd" = "homeworld", 
                 janitor:::mu_to_u)
+  ) |> 
+  names()
+```
+
+## `clean_names()` continued (again)
+
+```{r}
+species_messy |> 
+  clean_names(
+    case = "snake", #default case
+  ) |> 
+  names()
+```
+
+<br>
+
+. . . 
+
+```{r}
+#| output-location: fragment
+
+species_messy |> 
+  clean_names(
+    case = "snake",
+    parsing_option = 0,
+    replace = janitor:::mu_to_u
   ) |> 
   names()
 ```
@@ -228,8 +259,9 @@ films_messy |>
 ```
 
 
-## `remove_empty`
+## `remove_empty()`
 
+Removes empty columns from a data frame
 
 ```{r}
 #| output-location: fragment
@@ -237,6 +269,10 @@ films_messy |>
 films_messy |> 
   select(title, director, sl_opinion, ck_opinion)
 ```
+
+<br>
+
+. . . 
 
 ```{r}
 #| output-location: fragment
@@ -248,23 +284,26 @@ films_messy |>
 ```
 
 
-## `remove_constant`
+## `remove_constant()`
 
 Removes columns with one constant value
 
-
 ```{r}
+#| output-location: fragment
+
 films_messy |> 
   select(title, director, sl_opinion, ck_opinion) |>
   remove_constant()
 ```
 
 
-## `remove_constant` continued
+## `remove_constant()` continued
 
 Can also specify whether NA's should be considered different from a constant value
 
 ```{r}
+#| output-location: fragment
+
 films_messy |> 
   select(title, director, sl_opinion, ck_opinion) |>
   remove_constant(
@@ -277,7 +316,9 @@ films_messy |>
 ![](images/star-wars-junk.gif)
 
 
-## rounding in {base} vs rounding in {janitor}
+## Rounding in `{base}` vs rounding in `{janitor}`
+
+Selecting some data to work with...
 
 ```{r}
 characters_messy |> 
@@ -285,12 +326,13 @@ characters_messy |>
   filter(name %in% c("Leia Organa", "Pong Krell"))
 ```
 
-## rounding in {base} vs rounding in {janitor}
+
+## Rounding in `{base}` vs rounding in `{janitor}`
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-`base::round`
+`base::round()`
 ```{r}
 #| output-location: fragment
 
@@ -307,7 +349,7 @@ base::round(2.5)
 :::
 
 ::: {.column width="50%"}
-`janitor::round_half_up`
+`janitor::round_half_up()`
 ```{r}
 #| output-location: fragment
 
@@ -325,9 +367,9 @@ janitor::round_half_up(2.5)
 
 ::::
 
-## `round_half_up`
+## `round_half_up()`
 
-Rounds up any .5
+Rounds up any .5 (typical rounding convention)
 
 ```{r}
 #| output-location: fragment
@@ -341,9 +383,9 @@ characters_messy |>
 ```
 
 
-## `signif_half_up`
+## `signif_half_up()`
 
-Similar to `round_half_up` but can specify number of significant digits
+Similar to `round_half_up()` but can specify number of significant digits
 
 ```{r}
 #| output-location: fragment
@@ -357,9 +399,11 @@ characters_messy |>
 ```
 
 
-## `round_to_fraction`
+## `round_to_fraction()`
 
 WORK IN PROGRESS (WIP)
+
+Rounds to the nearest fraction
 
 ```{r}
 #| output-location: fragment
@@ -367,25 +411,25 @@ WORK IN PROGRESS (WIP)
 characters_messy |> 
   select(name, height) |> 
   mutate(
-    HEIGHT_FRACTION = round_to_fraction(height, denominator = 3)
+    HEIGHT_FRACTION = round_to_fraction(height, denominator = 4)
   )
 ```
 
 
-## `compare_df_cols`
+## `compare_df_cols()`
 
 Used to see whether column classes conflict and prevent row binding
 
 ```{r}
+#| output-location: fragment
+
 compare_df_cols(characters_human_messy, characters_nonhuman_messy)
 ```
 
 
-## `compare_df_cols` continued
+## `compare_df_cols()` continued
 
 ```{r}
-#| output-location: fragment
-
 characters_human_extra_messy <-
   characters_human_messy |> 
   mutate(
@@ -401,10 +445,9 @@ compare_df_cols(characters_human_extra_messy, characters_nonhuman_messy)
 ```
 
 
-## `compare_df_cols_same`
+## `compare_df_cols_same()`
 
 Returns `TRUE` or `FALSE` saying if the dataframes can successfully row bind
-
 
 ```{r}
 #| output-location: fragment
@@ -412,6 +455,10 @@ Returns `TRUE` or `FALSE` saying if the dataframes can successfully row bind
 
 compare_df_cols_same(characters_human_messy, characters_nonhuman_messy)
 ```
+
+<br>
+
+. . . 
 
 ```{r}
 #| output-location: fragment
@@ -425,21 +472,33 @@ compare_df_cols_same(characters_human_extra_messy, characters_nonhuman_messy)
 
 ![](images/the-garbage-will-do-rey-palpatine.gif) 
 
-## `tabyl()` Basics
+## `tabyl()` basics
 
 `tabyl()` is halfway between `table()` and `gtsummary::cross_tab()`
 
 ```{r}
+#| output-location: fragment
+
 ## one variable
 characters_messy |> 
   tabyl(death_status)
 ```
+
 <br>
+
+. . . 
+
 ```{r}
+#| output-location: fragment
+
 ## two variables
 characters_messy |> 
   tabyl(death_status, bmi)
 ```
+
+. . . 
+
+[Note:]{.emphasized} you can `untabyl()` a tabyl to remove all tabyl properties
 
 ## `adorn_*()`
 
@@ -463,6 +522,8 @@ Functions that come after using `adorn_percentages()`
 ## Adorn with totals and titles
 
 ```{r}
+#| output-location: fragment
+
 characters_messy |> 
   tabyl(death_status, bmi, show_na = FALSE) |> 
   adorn_totals() |> 
@@ -472,6 +533,8 @@ characters_messy |>
 ## Adorn with percentages
 
 ```{r}
+#| output-location: fragment
+
 characters_messy |> 
   tabyl(death_status, bmi, show_na = FALSE) |> 
   adorn_percentages() |> 
@@ -480,7 +543,11 @@ characters_messy |>
 
 <br>
 
+. . . 
+
 ```{r}
+#| output-location: fragment
+
 characters_messy |> 
   tabyl(death_status, bmi, show_na = FALSE) |> 
   adorn_percentages() |> 
@@ -488,15 +555,42 @@ characters_messy |>
   adorn_ns()
 ```
 
-## FYI
+## Adorn with titles, totals, percentages
 
-* untabyl -- when would we want to do this??????
+[Be careful of the order these functions are in...]{.emphasized}
 
-# Takeaways
+* `adorn_totals()` must go before all other `adorn_*()` functions (gives somewhat helpful error)  
+* `adorn_title()` must go after `adorn_percentages()`  (will give nonsense error)  
 
-## Takeaways
+```{r}
+#| output-location: fragment
+
+characters_messy |> 
+  tabyl(death_status, bmi, show_na = FALSE) |> 
+  adorn_totals() |>
+  adorn_percentages() |> 
+  adorn_pct_formatting() |> 
+  adorn_title()
+```
 
 
-# MAY THE FORCE BE WITH YOU
 
-![](images/mtfbwy-leia.webp)
+# Takeaways {background-image="images/stars_bg2.png" style="text-align: center;"}
+
+## Takeaways {.incremental}
+
+* Function masking {.emphasized} is something to be aware of!    
+* Base R may not be rounding like you think it is...    
+* Some useful functions from `{janitor}`:   
+  + `clean_names()` (in every `10-setup_XXX.qmd`)   
+  + `get_dupes()`     
+  + `convert_to_date()`   
+  + `compare_df_cols()` / `compare_df_cols_same()`    
+
+
+# MAY THE FORCE BE WITH YOU {background-image="images/stars_bg2.png" style="text-align: center;"}
+
+![](images/lando-wave.webp)
+
+
+
