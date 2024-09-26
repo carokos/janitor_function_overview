@@ -97,6 +97,18 @@ characters_messy <-
          bmi = if_else(weight > 75, "BMI High", "BMI Low"))
 ```
 
+```{r}
+#| include: false
+
+characters_human_messy <- 
+  characters_messy |> 
+  filter(species %in% c("Human"))
+  
+characters_nonhuman_messy <- 
+  characters_messy |> 
+  filter(!species %in% c("Human"))
+```
+
 
 ## Films
 
@@ -154,7 +166,11 @@ species_messy |>
 ```{r}
 #| output-location: fragment
 
-names(species_messy)
+species_messy |> 
+  clean_names(
+    case = "snake", #default case
+  ) |> 
+  names()
 ```
 
 ```{r}
@@ -214,12 +230,20 @@ films_messy |>
 
 ## `remove_empty`
 
+
 ```{r}
 #| output-location: fragment
 
-films_messy
+films_messy |> 
+  select(title, director, sl_opinion, ck_opinion)
+```
+
+```{r}
+#| output-location: fragment
+
 
 films_messy |> 
+  select(title, director, sl_opinion, ck_opinion) |> 
   remove_empty("cols")
 ```
 
@@ -231,16 +255,18 @@ Removes columns with one constant value
 
 ```{r}
 films_messy |> 
+  select(title, director, sl_opinion, ck_opinion) |>
   remove_constant()
 ```
 
 
-## `remove_constant`
+## `remove_constant` continued
 
 Can also specify whether NA's should be considered different from a constant value
 
 ```{r}
 films_messy |> 
+  select(title, director, sl_opinion, ck_opinion) |>
   remove_constant(
     na.rm = TRUE # default is FALSE
   )
@@ -250,13 +276,150 @@ films_messy |>
 
 ![](images/star-wars-junk.gif)
 
-## functions
 
--   round_half_up \[kaggle characters - height\]
--   round_to_fraction \[kaggle characters - height\]
--   signif_half_up \[kaggle characters - height\]
--   compare_df_cols (checking) \[split kaggle characters into humans vs non-human and mess one up, then use these to check before row binding\]
--   compare_df_cols_same (checking) \[split kaggle characters into humans vs non-human and mess one up, then use these to check before row binding\]
+## rounding in {base} vs rounding in {janitor}
+
+```{r}
+characters_messy |> 
+  select(name, height) |> 
+  filter(name %in% c("Leia Organa", "Pong Krell"))
+```
+
+## rounding in {base} vs rounding in {janitor}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+`base::round`
+```{r}
+#| output-location: fragment
+
+
+base::round(1.5)
+```
+
+```{r}
+#| output-location: fragment
+
+
+base::round(2.5)
+```
+:::
+
+::: {.column width="50%"}
+`janitor::round_half_up`
+```{r}
+#| output-location: fragment
+
+
+janitor::round_half_up(1.5)
+```
+
+```{r}
+#| output-location: fragment
+
+
+janitor::round_half_up(2.5)
+```
+:::
+
+::::
+
+## `round_half_up`
+
+Rounds up any .5
+
+```{r}
+#| output-location: fragment
+
+
+characters_messy |> 
+  select(name, height) |> 
+  mutate(
+    HEIGHT_HALFUP = round_half_up(height)
+  )
+```
+
+
+## `signif_half_up`
+
+Similar to `round_half_up` but can specify number of significant digits
+
+```{r}
+#| output-location: fragment
+
+
+characters_messy |> 
+  select(name, height) |> 
+  mutate(
+    HEIGHT_SIGFIG = signif_half_up(height, 2)
+  )
+```
+
+
+## `round_to_fraction`
+
+WORK IN PROGRESS (WIP)
+
+```{r}
+#| output-location: fragment
+
+characters_messy |> 
+  select(name, height) |> 
+  mutate(
+    HEIGHT_FRACTION = round_to_fraction(height, denominator = 3)
+  )
+```
+
+
+## `compare_df_cols`
+
+Used to see whether column classes conflict and prevent row binding
+
+```{r}
+compare_df_cols(characters_human_messy, characters_nonhuman_messy)
+```
+
+
+## `compare_df_cols` continued
+
+```{r}
+#| output-location: fragment
+
+characters_human_extra_messy <-
+  characters_human_messy |> 
+  mutate(
+    across(everything(), ~as.character(.x))
+  )
+```
+
+```{r}
+#| output-location: fragment
+
+
+compare_df_cols(characters_human_extra_messy, characters_nonhuman_messy)
+```
+
+
+## `compare_df_cols_same`
+
+Returns `TRUE` or `FALSE` saying if the dataframes can successfully row bind
+
+
+```{r}
+#| output-location: fragment
+
+
+compare_df_cols_same(characters_human_messy, characters_nonhuman_messy)
+```
+
+```{r}
+#| output-location: fragment
+
+
+compare_df_cols_same(characters_human_extra_messy, characters_nonhuman_messy)
+```
+
 
 # `tabyl()` {background-image="images/stars_bg2.png" style="text-align: center;"}
 
@@ -332,6 +495,7 @@ characters_messy |>
 # Takeaways
 
 ## Takeaways
+
 
 # MAY THE FORCE BE WITH YOU
 
