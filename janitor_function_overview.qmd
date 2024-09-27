@@ -178,13 +178,16 @@ species_messy |>
 
 . . . 
 
+* the `replace` argument: a named character vector where the name is replaced by the vector 
+
 ```{r}
 #| output-location: fragment
+#| code-line-numbers: "4,5"
 species_messy |> 
   clean_names(
-    case = "snake", #default case
+    case = "snake", # default case
     replace = c("hAiR" = "hair", "cOlOrS" = "colors", "hOmEwOrLd" = "homeworld", 
-                janitor:::mu_to_u)
+                janitor:::mu_to_u) 
   ) |> 
   names()
 ```
@@ -203,10 +206,11 @@ species_messy |>
 
 . . . 
 
-[BONUS]{.emphasized} If you don't want to list out all capitalization fixes, you can change the parsing option, but it will override the `case=` argument.
+[BONUS]{.emphasized} To make the code more tidy, you can change the parsing option, but it will override the `case=` argument.
 
 ```{r}
 #| output-location: fragment
+#| code-line-numbers: "4"
 
 species_messy |> 
   clean_names(
@@ -272,6 +276,8 @@ release_dates <- as.character(films_messy$release_date)
 release_dates[4] <- "5/25/1977"
 release_dates
 ```
+
+<br>
 
 . . . 
 
@@ -365,6 +371,47 @@ characters_messy |>
 ```
 
 
+## Rounding in `{base}` vs rounding in `{janitor}` test
+
+```{r}
+#| output-location: column-fragment
+
+base::round(1.5)
+
+
+```
+
+<br>
+
+. . .
+
+```{r}
+#| output-location: column-fragment
+
+janitor::round_half_up(1.5)
+```
+
+<br>
+
+. . .
+
+```{r}
+#| output-location: column-fragment
+
+base::round(2.5)
+```
+
+<br>
+
+. . .
+
+```{r}
+#| output-location: column-fragment
+
+janitor::round_half_up(2.5)
+```
+
+
 ## Rounding in `{base}` vs rounding in `{janitor}`
 
 :::: {.columns}
@@ -438,8 +485,6 @@ characters_messy |>
 
 
 ## `round_to_fraction()`
-
-WORK IN PROGRESS (WIP)
 
 Rounds to the nearest fraction
 
