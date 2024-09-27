@@ -260,6 +260,42 @@ films_messy |>
   select(title, release_date, release_date_clean, release_data_lub)
 ```
 
+## `convert_to_date()` continued
+
+Let's say you have annoying date formats mixed together: 
+
+```{r}
+#| output-location: fragment
+
+## simulating because I am incapable of making an Excel THAT messed up
+release_dates <- as.character(films_messy$release_date)
+release_dates[4] <- "5/25/1977"
+release_dates
+```
+
+. . . 
+
+```{r}
+#| output-location: fragment
+
+## convert mm/dd/yyyy to yyyy-mm-dd format
+release_dates2 <- if_else(str_detect(release_dates, "/"),
+                          as.character(lubridate::mdy(release_dates)),
+                          release_dates)
+release_dates2
+```
+
+<br>
+
+. . . 
+
+```{r}
+#| output-location: fragment
+
+convert_to_date(release_dates2)
+```
+
+
 
 ## `remove_empty()`
 
