@@ -203,6 +203,8 @@ species_messy |>
 
 . . . 
 
+[BONUS]{.emphasized} If you don't want to list out all capitalization fixes, you can change the parsing option, but it will override the `case=` argument.
+
 ```{r}
 #| output-location: fragment
 
@@ -369,7 +371,7 @@ janitor::round_half_up(2.5)
 
 ## `round_half_up()`
 
-Rounds up any .5 (typical rounding convention)
+Rounds up any .5 ("typical" rounding convention)
 
 ```{r}
 #| output-location: fragment
@@ -394,7 +396,7 @@ Similar to `round_half_up()` but can specify number of significant digits
 characters_messy |> 
   select(name, height) |> 
   mutate(
-    HEIGHT_SIGFIG = signif_half_up(height, 2)
+    HEIGHT_SIGFIG = signif_half_up(height, digits = 2)
   )
 ```
 
@@ -436,6 +438,8 @@ characters_human_extra_messy <-
     across(everything(), ~as.character(.x))
   )
 ```
+
+<br>
 
 ```{r}
 #| output-location: fragment
@@ -505,8 +509,8 @@ characters_messy |>
 Functions to make your "tabyls" more readable:
 
 * `adorn_title()` -- add column name to the top of a two-way table    
-* `adorn_totals()` -- add row/column totals to a tabyl   
 * `adorn_percentages()` -- converts tabyl of counts to percentages   
+* `adorn_totals()` -- add row/column totals to a tabyl   
 
 <br> 
 
@@ -577,9 +581,13 @@ characters_messy |>
 
 # Takeaways {background-image="images/stars_bg2.png" style="text-align: center;"}
 
-## Takeaways {.incremental}
+![](images/tumblr_nm4ivvzGfn1sl21koo1_540.webp) 
 
-* Function masking {.emphasized} is something to be aware of!    
+## Takeaways 
+
+::: {.incremental}
+
+* Function [masking]{.emphasized} is something to be aware of!    
 * Base R may not be rounding like you think it is...    
 * Some useful functions from `{janitor}`:   
   + `clean_names()` (in every `10-setup_XXX.qmd`)   
@@ -587,6 +595,7 @@ characters_messy |>
   + `convert_to_date()`   
   + `compare_df_cols()` / `compare_df_cols_same()`    
 
+:::
 
 # MAY THE FORCE BE WITH YOU {background-image="images/stars_bg2.png" style="text-align: center;"}
 
