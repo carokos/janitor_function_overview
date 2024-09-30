@@ -371,86 +371,46 @@ characters_messy |>
 ```
 
 
-## Rounding in `{base}` vs rounding in `{janitor}` test
-
-```{r}
-#| output-location: column-fragment
-
-base::round(1.5)
-
-
-```
-
-<br>
-
-. . .
-
-```{r}
-#| output-location: column-fragment
-
-janitor::round_half_up(1.5)
-```
-
-<br>
-
-. . .
-
-```{r}
-#| output-location: column-fragment
-
-base::round(2.5)
-```
-
-<br>
-
-. . .
-
-```{r}
-#| output-location: column-fragment
-
-janitor::round_half_up(2.5)
-```
-
-
 ## Rounding in `{base}` vs rounding in `{janitor}`
 
-:::: {.columns}
-
-::: {.column width="50%"}
-`base::round()`
 ```{r}
-#| output-location: fragment
-
+#| output-location: column-fragment
 
 base::round(1.5)
+
+
 ```
 
+<br>
+
+. . .
+
 ```{r}
-#| output-location: fragment
-
-
-base::round(2.5)
-```
-:::
-
-::: {.column width="50%"}
-`janitor::round_half_up()`
-```{r}
-#| output-location: fragment
-
+#| output-location: column-fragment
 
 janitor::round_half_up(1.5)
 ```
 
-```{r}
-#| output-location: fragment
+<br>
 
+. . .
+
+```{r}
+#| output-location: column-fragment
+
+base::round(2.5)
+```
+
+<br>
+
+. . .
+
+```{r}
+#| output-location: column-fragment
 
 janitor::round_half_up(2.5)
 ```
-:::
 
-::::
 
 ## `round_half_up()`
 
