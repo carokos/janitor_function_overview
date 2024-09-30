@@ -197,7 +197,9 @@ species_messy |>
 ```{r}
 species_messy |> 
   clean_names(
-    case = "snake", #default case
+    case = "snake", # default case
+    replace = c("hAiR" = "hair", "cOlOrS" = "colors", "hOmEwOrLd" = "homeworld", 
+                janitor:::mu_to_u) 
   ) |> 
   names()
 ```
@@ -252,7 +254,7 @@ characters_messy |>
 
 ## `convert_to_date()`
 
-* Can handle mixed types ("2024-10-01" [character] vs 344402 [numeric])   
+* Can handle mixed types ("2024-10-01" vs "344402")   
 * Will handle Excel-specific date numbers (through `excel_numeric_to_date()`)
 
 ```{r}
@@ -571,7 +573,9 @@ Functions that come after using `adorn_percentages()`
 
 characters_messy |> 
   tabyl(death_status, bmi, show_na = FALSE) |> 
-  adorn_totals() |> 
+  adorn_totals(
+    where = c("row", "col") #default is "row" only
+  ) |> 
   adorn_title()
 ```
 
@@ -582,7 +586,9 @@ characters_messy |>
 
 characters_messy |> 
   tabyl(death_status, bmi, show_na = FALSE) |> 
-  adorn_percentages() |> 
+  adorn_percentages(
+    denominator = "row" #default
+  ) |> 
   adorn_pct_formatting()
 ```
 
@@ -612,9 +618,9 @@ characters_messy |>
 
 characters_messy |> 
   tabyl(death_status, bmi, show_na = FALSE) |> 
-  adorn_totals() |>
-  adorn_percentages() |> 
-  adorn_pct_formatting() |> 
+  adorn_totals(where = c("row", "col")) |>
+  adorn_percentages(denominator = "all") |> 
+  adorn_pct_formatting(rounding = "half up") |> 
   adorn_title()
 ```
 
